@@ -33,7 +33,17 @@ with open('worldcities.csv', 'r', encoding='utf-8') as f:
         longitudes.append(row[3])
 
 def main():
-    print('\nWelcome to City Route!')
+    print("""
+
+   ___ _ _             __             _       
+  / __(_) |_ _   _    /__\ ___  _   _| |_ ___ 
+ / /  | | __| | | |  / \/// _ \| | | | __/ _ \\
+/ /___| | |_| |_| | / _  \ (_) | |_| | ||  __/
+\____/|_|\__|\__, | \/ \_/\___/ \__,_|\__\___|
+             |___/                            
+
+""")
+    print('Welcome to City Route!')
     print('\nPlease enter 5 cities starting with your starting city\n')
     c1_index = enter_city()
     c1 = City(cities[c1_index], latitudes[c1_index], longitudes[c1_index])
@@ -53,6 +63,8 @@ def main():
     print(c1.name, c2.name, c3.name, c4.name, c5.name)
     print(c1.latitude, c2.latitude, c3.latitude, c4.latitude, c5.latitude)
     print(c1.longitude, c2.longitude, c3.longitude, c4.longitude, c5.longitude)
+
+
 
 
 
