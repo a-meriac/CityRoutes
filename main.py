@@ -1,23 +1,24 @@
 import csv
 import math
+import itertools
 
 cities = []
 latitudes = []
 longitudes = []
 
 def enter_city():
-    city_input = input(f'\nEnter a city name:')
+    city_input = input(f'\nEnter a city name: ')
     if city_input in cities:
         return cities.index(city_input)
     else:
         print('City not found, please try again and ensure proper punctuation and capitalization')
         return enter_city()
 
-def distance(index1, index2):
-    lat1 = latitudes[index1]
-    lon1 = longitudes[index1]
-    lat2 = latitudes[index2]
-    lon2 = longitudes[index2]
+def distance(city1, city2):
+    lat1 = city1.latitude
+    lon1 = city1.longitude
+    lat2 = city2.latitude
+    lon2 = city2.longitude
 
     lat1 = math.radians(float(lat1))
     lon1 = math.radians(float(lon1))
@@ -62,16 +63,6 @@ with open('worldcities.csv', 'r', encoding='utf-8') as f:
         longitudes.append(row[3])
 
 def main():
-    print("""
-
-   ___ _ _             __             _       
-  / __(_) |_ _   _    /__\ ___  _   _| |_ ___ 
- / /  | | __| | | |  / \/// _ \| | | | __/ _ \\
-/ /___| | |_| |_| | / _  \ (_) | |_| | ||  __/
-\____/|_|\__|\__, | \/ \_/\___/ \__,_|\__\___|
-             |___/                            
-
-""")
     print('Welcome to City Route!')
     print('\nPlease enter 5 cities:\n')
     c1_index = enter_city()
@@ -89,21 +80,34 @@ def main():
     c5_index = enter_city()
     c5 = City(cities[c5_index], latitudes[c5_index], longitudes[c5_index])
 
-    start = City("Start", float(input("\n Please enter the latitude of your starting point:")), float(input("\n Please enter the longitude of your starting point:")))
+    start = City("Start", float(input("\nPlease enter the latitude of your starting point: ")), float(input("\nPlease enter the longitude of your starting point: ")))
 
     city_list = [start, c1, c2, c3, c4, c5]
     distance_list = make_distance_list(city_list)
 
-    print(city_list)
-    print(distance_list)
+    best_distance = 2 ** 999
 
+    for perm in itertools.permutations([1,2,3,4,5]):
+        total_distance = distance_list[0][perm[0]]
 
+        for i in range(len(perm)-1):
+            total_distance += distance_list[perm[i]][perm[i+1]]
 
+        total_distance += distance_list[0][perm[4]]
 
+        if total_distance < best_distance:
+            best_distance = total_distance
+            best_route = perm
 
+    output = "Start -> "
+    for x in best_route:
+        output += city_list[x].name
+        output += "-> "
 
+    output += "Start"
+
+    print(output)
+    print(f"To follow this route you would have to travel {best_distance} kilometers.")
 
 
 main()
-
-
