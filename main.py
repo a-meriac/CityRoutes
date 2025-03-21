@@ -109,5 +109,33 @@ def main():
     print(output)
     print(f"To follow this route you would have to travel {best_distance} kilometers.")
 
+    #This end part is not my code, I took it from the folium documentation to visualise the route
+    print("\nGenerating map...")
+
+    # Create map centered at the start location
+    route_map = folium.Map(location=[float(start.latitude), float(start.longitude)], zoom_start=3)
+
+    # Build list of coordinates in the best route order
+    route_coords = [[float(start.latitude), float(start.longitude)]]
+    for x in best_route:
+        route_coords.append([float(city_list[x].latitude), float(city_list[x].longitude)])
+    route_coords.append([float(start.latitude), float(start.longitude)])  # Return to start
+
+    # Add markers
+    folium.Marker(location=[float(start.latitude), float(start.longitude)], popup='Start',
+                  icon=folium.Icon(color='green')).add_to(route_map)
+    for x in best_route:
+        folium.Marker(
+            location=[float(city_list[x].latitude), float(city_list[x].longitude)],
+            popup=city_list[x].name
+        ).add_to(route_map)
+
+    # Draw the route line
+    folium.PolyLine(route_coords, color="blue", weight=2.5, opacity=1).add_to(route_map)
+
+    # Save the map
+    route_map.save("best_route_map.html")
+    print("Map saved as 'best_route_map.html'! Open it in your browser to view the route.")
+
 
 main()
