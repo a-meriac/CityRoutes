@@ -1,6 +1,7 @@
 import csv
 import math
 import itertools
+import folium
 
 cities = []
 latitudes = []
